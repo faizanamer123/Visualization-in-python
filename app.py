@@ -71,7 +71,7 @@ def main():
 
     else:
         st.write("### Default Enhanced Budget Data Visualization")
-        data = load_data('enhanced_budget_data.csv')
+        data = load_data('budget_data.csv')
         st.dataframe(data)
 
         fig = draw_beautiful_sankey(data)
