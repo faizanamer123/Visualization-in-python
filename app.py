@@ -55,6 +55,9 @@ def main():
     st.set_page_config(page_title="Budget Visualization", layout="wide")
     st.title("Budget Visualization")
     st.markdown(
+        """
+        This visualization presents a detailed and engaging overview of the budget, allowing for an interactive exploration of income and expenditure categories.
+        """
     )
 
     st.sidebar.header("📊 Upload Your Budget Data")
@@ -99,5 +102,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
