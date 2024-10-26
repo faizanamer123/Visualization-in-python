@@ -17,9 +17,10 @@ def sankey(data):
     ]
     node_colors = color_palette * (len(all_labels) // len(color_palette) + 1)
     
+    max_val = data['value'].max()
     link_colors = [
-        f'rgba(0, {int(128 + (127 * (val / max(data["value"])))), 255 - int(128 * (val / max(data["value"])))}, 0.5)'
-        if val >= 300 else f'rgba(255, {int(99 * (val / max(data["value"])))}, 71, 0.4)'
+        f'rgba(0, {128 + int(127 * (val / max_val))}, {255 - int(128 * (val / max_val))}, 0.5)'
+        if val >= 300 else f'rgba(255, {int(99 * (val / max_val))}, 71, 0.4)'
         for val in data['value']
     ]
 
