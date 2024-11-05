@@ -68,17 +68,21 @@ def main():
         st.write("### Uploaded Enhanced Budget Data")
         st.dataframe(data)
 
+        # Display initial visualization
+        st.write("### Initial Budget Visualization")
         fig = sankey(data)
         st.plotly_chart(fig, use_container_width=True)
-
     else:
         st.write("### Default Enhanced Budget Data Visualization")
         data = load_data('budget_data.csv')
         st.dataframe(data)
 
+        # Display initial visualization
+        st.write("### Initial Budget Visualization")
         fig = sankey(data)
         st.plotly_chart(fig, use_container_width=True)
 
+    # Sidebar for adding new data
     st.sidebar.header("✏️ Adjust Data")
     new_source = st.sidebar.text_input("New Source")
     new_target = st.sidebar.text_input("New Target")
@@ -95,13 +99,14 @@ def main():
             st.write("### Updated Budget Data")
             st.dataframe(data)
 
-            fig = sankey(data)
-            st.plotly_chart(fig, use_container_width=True)
+            # Display updated visualization
+            st.write("### Updated Budget Visualization")
+            updated_fig = sankey(data)
+            st.plotly_chart(updated_fig, use_container_width=True)
         else:
             st.sidebar.error("Please enter valid data!")
 
 if __name__ == "__main__":
     main()
-
 
 
