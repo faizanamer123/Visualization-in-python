@@ -1,4 +1,4 @@
-This Streamlit application provides an interactive visualization of budget data using a Sankey diagram. Users can upload their budget data in CSV format, view a detailed overview of income and expenditure categories, and make adjustments to the data.
+This Streamlit application provides an interactive visualization of budget data using a Sankey diagram. Users can upload their data in CSV format, view a detailed overview of income and expenditure categories, and make adjustments to the data.
 
 Features
 Interactive Sankey Diagram: Visualize the flow of budget allocations and expenditures.
