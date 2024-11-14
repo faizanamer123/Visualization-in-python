@@ -2,6 +2,16 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
+# Load and prepare literacy data from CSV for Sankey visualization
+def load_and_prepare_data(file_path):
+    df = pd.read_csv(file_path)
+    # Focus on recent data (e.g., literacy rates in 2022) and filter out rows with NaN values
+    df = df[['Region', 'Country', '2022']].dropna()
+    df.columns = ['source', 'target', 'value']
+    df['value'] = df['value'].astype(float)
+    return df
+
+# Enhanced Sankey plot function with improved visuals
 def sankey(data):
     sources = data['source'].unique().tolist()
     targets = data['target'].unique().tolist()
@@ -11,102 +21,76 @@ def sankey(data):
     data['source_index'] = data['source'].apply(lambda x: node_indices[x])
     data['target_index'] = data['target'].apply(lambda x: node_indices[x])
 
-    color_palette = [
-        "#636EFA", "#EF553B", "#00CC96", "#AB63FA", "#FFA15A",
-        "#19D3F3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52"
-    ]
-    node_colors = color_palette * (len(all_labels) // len(color_palette) + 1)
-    
-    max_val = data['value'].max()
+    # Define a more refined color palette for nodes
+    node_colors = [
+        "#8e44ad", "#2980b9", "#16a085", "#e74c3c", "#f39c12",
+        "#d35400", "#2ecc71", "#c0392b", "#3498db", "#9b59b6"
+    ] * (len(all_labels) // 10 + 1)
+
+    # Generate gradient colors for links based on literacy rate values
+    max_value = data['value'].max()
     link_colors = [
-        f'rgba(0, {128 + int(127 * (val / max_val))}, {255 - int(128 * (val / max_val))}, 0.5)'
-        if val >= 300 else f'rgba(255, {int(99 * (val / max_val))}, 71, 0.4)'
+        f'rgba({255 - int(200 * (val / max_value))}, {55 + int(200 * (val / max_value))}, {150 - int(100 * (val / max_value))}, 0.7)'
         for val in data['value']
     ]
 
     fig = go.Figure(data=[go.Sankey(
         node=dict(
             pad=25,
-            thickness=30,
-            line=dict(color="black", width=0.8),
+            thickness=20,
+            line=dict(color="black", width=0.5),
             label=all_labels,
-            color=node_colors[:len(all_labels)]
+            color=node_colors[:len(all_labels)],
+            hovertemplate='%{label} has %{value} connections<extra></extra>'
         ),
         link=dict(
             source=data['source_index'],
             target=data['target_index'],
             value=data['value'],
-            color=link_colors
+            color=link_colors,
+            hovertemplate='From %{source.label} to %{target.label}<br>Value: %{value}<extra></extra>'
         ))])
 
+    # Update layout for better visualization aesthetics
     fig.update_layout(
-        title_text="<b>Budget Visualization for 2024-25</b>",
-        title_font=dict(size=20, color='#2c3e50'),
-        font=dict(size=14, color='#34495e'),
-        paper_bgcolor='#ecf0f1',  
-        margin=dict(l=50, r=50, t=80, b=50)
+        title_text="<b>2022 Literacy Rates - Regional vs. Country Distribution</b>",
+        title_font=dict(size=22, color='#2c3e50'),
+        font=dict(size=14, color='#2c3e50'),
+        paper_bgcolor='#f8f9fa',
+        margin=dict(l=40, r=40, t=80, b=40),
+        plot_bgcolor='#ffffff',
+        hovermode='x'
     )
     return fig
 
-def load_data(file_path):
-    return pd.read_csv(file_path)
-
+# Main Streamlit app
 def main():
-    st.set_page_config(page_title="Budget Visualization", layout="wide")
-    st.title("Budget Visualization")
+    st.set_page_config(page_title="Literacy Data Visualization", layout="wide")
+    st.title("Literacy Data Visualization - 2022")
     st.markdown(
         """
-        This visualization presents a detailed and engaging overview of the budget, allowing for an interactive exploration of income and expenditure categories.
+        This interactive visualization provides insights into literacy rates across different regions and countries for 2022.
+        Upload your data to see a customized visualization.
         """
     )
 
-    st.sidebar.header("📊 Upload Your Budget Data")
+    # Sidebar for file upload
+    st.sidebar.header("📊 Upload Literacy Data")
     uploaded_file = st.sidebar.file_uploader("Upload your CSV file", type=["csv"])
 
     if uploaded_file:
-        data = pd.read_csv(uploaded_file)
-        st.write("### Uploaded Enhanced Budget Data")
+        data = load_and_prepare_data(uploaded_file)
+        st.write("### Uploaded Literacy Data")
         st.dataframe(data)
 
-        # Display initial visualization
-        st.write("### Initial Budget Visualization")
+        st.write("### Literacy Visualization")
         fig = sankey(data)
         st.plotly_chart(fig, use_container_width=True)
     else:
-        st.write("### Default Enhanced Budget Data Visualization")
-        data = load_data('budget_data.csv')
-        st.dataframe(data)
-
-        # Display initial visualization
-        st.write("### Initial Budget Visualization")
-        fig = sankey(data)
-        st.plotly_chart(fig, use_container_width=True)
-
-    # Sidebar for adding new data
-    st.sidebar.header("✏️ Adjust Data")
-    new_source = st.sidebar.text_input("New Source")
-    new_target = st.sidebar.text_input("New Target")
-    new_value = st.sidebar.number_input("New Value", min_value=0, value=0)
-
-    if st.sidebar.button("Add Entry"):
-        if new_source and new_target and new_value > 0:
-            new_entry = pd.DataFrame({
-                'source': [new_source],
-                'target': [new_target],
-                'value': [new_value]
-            })
-            data = pd.concat([data, new_entry], ignore_index=True)
-            st.write("### Updated Budget Data")
-            st.dataframe(data)
-
-            # Display updated visualization
-            st.write("### Updated Budget Visualization")
-            updated_fig = sankey(data)
-            st.plotly_chart(updated_fig, use_container_width=True)
-        else:
-            st.sidebar.error("Please enter valid data!")
+        st.write("### Please upload a literacy data CSV file.")
 
 if __name__ == "__main__":
     main()
+
 
 
