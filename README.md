@@ -1,13 +1,17 @@
-This Streamlit application provides an interactive visualization of budget data using a Sankey diagram. Users can upload their data in CSV format, view a detailed overview of income and expenditure categories, and make adjustments to the data.
+This Streamlit app visualizes literacy data in the form of a Sankey diagram. The application allows users to upload a CSV file containing literacy data, view the Sankey diagram based on that data, and dynamically modify the data using a multiplier to see how changes affect the visualization.
 
-Features
-Interactive Sankey Diagram: Visualize the flow of budget allocations and expenditures.
-File Upload: Upload your own CSV files containing budget data.
-Data Adjustment: Add new entries directly through the sidebar interface.
-Default Data: A sample budget dataset is provided for demonstration purposes.
+## Features
+- **Upload Literacy Data**: Upload a CSV file containing literacy data.
+- **Sankey Diagram Visualization**: Visualizes the flow of literacy data between regions and countries using a Sankey diagram.
+- **Dynamic Data Modification**: Adjust the values in the dataset using a slider to observe how changes impact the Sankey diagram.
 
-Requirements
-To run this application, you need the following Python packages:
-streamlit
-pandas
-plotly
+## Requirements
+To run this application, you'll need the following Python packages:
+
+- `streamlit`: For building the web app interface.
+- `pandas`: For data manipulation.
+- `plotly`: For creating interactive Sankey diagrams.
+
+You can install the required dependencies by running:
+-`pip install streamlit pandas plotly`
+
